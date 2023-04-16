@@ -12,75 +12,79 @@ if __name__ == "__main__":
     # Send message to Telegram
     try:
         send_message("DYDX Bot Started successfully")
-    except Exception as e:
-        print(e)
-
-
-    # Connect to DYDX
-    try:
-        print("Connecting to DYDX...")
-        client = connect_dydx()
-    except Exception as e:
-        print("Error:", e)
-        print (" Error connecting to DYDX. Check your keys and try again.")
-        send_message(f"Failed to connect to client {e}")
-        exit(1)
     
-    # Abord all open positions and orders 
-    if ABORD_ALL_POSITIONS:
+
+
+        # Connect to DYDX
         try:
-            print("Closing all open positions")
-            close_orders = abord_all_positions(client)
+            print("Connecting to DYDX...")
+            client = connect_dydx()
         except Exception as e:
-            print (" Error closing open positions: ", e)
-            send_message(f"Error closing all positions {e}")
+            print("Error:", e)
+            print (" Error connecting to DYDX. Check your keys and try again.")
+            send_message(f"Failed to connect to client {e}")
             exit(1)
-
-    # Find Cointegrated Pairs
-    if FIND_COINTEGRATED_PAIRS:
-
-        # Construct Market Prices
-        try:
-            print("Fetching market prices, please allow 3 mins...")
-            df_market_prices = construct_market_prices(client)
-
-        except Exception as e:
-            print("Error constructing market prices: ", e)
-            send_message(f"Error constructing market prices {e}")
-            exit(1)
-
-        # Store Cointegrated Pairs
-        try:
-            print("Storing cointegrated pairs...")
-            stores_result = store_cointegration_results(df_market_prices)
-            if stores_result != "saved":
-                print("Error saving cointegrated pairs")
-                exit(1)
-        except Exception as e:
-            print("Error saving cointegrated pairs: ", e)
-            send_message(f"Error saving cointegrated pairs {e}")
-            exit(1)
-
-    # Run as always on
-    while True:
-
-        # Place trades for opening positions
-        if MANAGE_EXITS:
+        
+        # Abord all open positions and orders 
+        if ABORD_ALL_POSITIONS:
             try:
-                print("Managing exits...")
-                manage_trade_exits(client)
+                print("Closing all open positions")
+                close_orders = abord_all_positions(client)
             except Exception as e:
-                print("Error managing exiting positions: ", e)
-                send_message(f"Error managing exiting positions {e}")
+                print (" Error closing open positions: ", e)
+                send_message(f"Error closing all positions {e}")
                 exit(1)
+
+        # Find Cointegrated Pairs
+        if FIND_COINTEGRATED_PAIRS:
+
+            # Construct Market Prices
+            try:
+                print("Fetching market prices, please allow 3 mins...")
+                df_market_prices = construct_market_prices(client)
+
+            except Exception as e:
+                print("Error constructing market prices: ", e)
+                send_message(f"Error constructing market prices {e}")
+                exit(1)
+
+            # Store Cointegrated Pairs
+            try:
+                print("Storing cointegrated pairs...")
+                stores_result = store_cointegration_results(df_market_prices)
+                if stores_result != "saved":
+                    print("Error saving cointegrated pairs")
+                    exit(1)
+            except Exception as e:
+                print("Error saving cointegrated pairs: ", e)
+                send_message(f"Error saving cointegrated pairs {e}")
+                exit(1)
+
+        # Run as always on
+        while True:
 
             # Place trades for opening positions
-        if PLACE_TRADES:
-            try:
-                print("Finding trading opportunities...")
-                open_positions(client)
-            except Exception as e:
-                print("Error trading pairs: ", e)
-                send_message(f"Error opening trades {e}")
-                exit(1)
-       
+            if MANAGE_EXITS:
+                try:
+                    print("Managing exits...")
+                    manage_trade_exits(client)
+                except Exception as e:
+                    print("Error managing exiting positions: ", e)
+                    send_message(f"Error managing exiting positions {e}")
+                    exit(1)
+
+                # Place trades for opening positions
+            if PLACE_TRADES:
+                try:
+                    print("Finding trading opportunities...")
+                    open_positions(client)
+                except Exception as e:
+                    print("Error trading pairs: ", e)
+                    send_message(f"Error opening trades {e}")
+                    exit(1)
+    except Exception as e:
+        print(e)
+        send_message("DYDX Bot Failed to start")
+        exit(1)
+    finally:
+        send_message("DYDX Bot Stopped")
