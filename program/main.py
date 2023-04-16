@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     # Send message to Telegram
     try:
-        send_message("DYDX Bot Started")
+        send_message("DYDX Bot Started successfully")
     except Exception as e:
         print(e)
 
@@ -23,6 +23,7 @@ if __name__ == "__main__":
     except Exception as e:
         print("Error:", e)
         print (" Error connecting to DYDX. Check your keys and try again.")
+        send_message(f"Failed to connect to client {e}")
         exit(1)
     
     # Abord all open positions and orders 
@@ -32,6 +33,7 @@ if __name__ == "__main__":
             close_orders = abord_all_positions(client)
         except Exception as e:
             print (" Error closing open positions: ", e)
+            send_message(f"Error closing all positions {e}")
             exit(1)
 
     # Find Cointegrated Pairs
@@ -44,6 +46,7 @@ if __name__ == "__main__":
 
         except Exception as e:
             print("Error constructing market prices: ", e)
+            send_message(f"Error constructing market prices {e}")
             exit(1)
 
         # Store Cointegrated Pairs
@@ -55,6 +58,7 @@ if __name__ == "__main__":
                 exit(1)
         except Exception as e:
             print("Error saving cointegrated pairs: ", e)
+            send_message(f"Error saving cointegrated pairs {e}")
             exit(1)
 
     # Run as always on
