@@ -5,8 +5,17 @@ from func_public import construct_market_prices
 from func_cointegration import store_cointegration_results
 from func_entry_pairs import open_positions
 from func_exit_pairs import manage_trade_exits
+from func_messaging import send_message
 
 if __name__ == "__main__":
+
+    # Send message to Telegram
+    try:
+        send_message("DYDX Bot Started")
+    except Exception as e:
+        print(e)
+
+
     # Connect to DYDX
     try:
         print("Connecting to DYDX...")
@@ -58,7 +67,7 @@ if __name__ == "__main__":
                 manage_trade_exits(client)
             except Exception as e:
                 print("Error managing exiting positions: ", e)
-                # send_message(f"Error managing exiting positions {e}")
+                send_message(f"Error managing exiting positions {e}")
                 exit(1)
 
             # Place trades for opening positions
@@ -68,6 +77,6 @@ if __name__ == "__main__":
                 open_positions(client)
             except Exception as e:
                 print("Error trading pairs: ", e)
-                # send_message(f"Error opening trades {e}")
+                send_message(f"Error opening trades {e}")
                 exit(1)
        
