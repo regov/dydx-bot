@@ -10,8 +10,11 @@ ABORD_ALL_POSITIONS = config('ABORD_ALL_POSITIONS', default=False, cast=bool)
 # Find Cointegrated Pairs
 FIND_COINTEGRATED_PAIRS = config('FIND_COINTEGRATED_PAIRS', default=True, cast=bool)
 
+# Manage Exits
+MANAGE_EXITS = config('MANAGE_EXITS', default=True, cast=bool)
+
 # Place Orders
-PLACE_ORDERS = config('PLACE_ORDERS', default=True, cast=bool)
+PLACE_TRADES = config('PLACE_TRADES', default=True, cast=bool)
 
 # Resolution
 RESOLUTION = config('RESOLUTION', default='1HOUR', cast=str)
