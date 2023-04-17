@@ -29,9 +29,11 @@ def connect_dydx():
     account = client.private.get_account()
     account_id = account.data["account"]["id"]
     quote_balance = account.data["account"]["quoteBalance"]
+    equity = account.data["account"]["equity"]
     print("Connection successful")
     print("Account Id", account_id)
-    print("Quote Balance", quote_balance)
+    # print("Quote Balance", quote_balance)
+    # print("Equity", equity)
 
     # Return Client
     return client

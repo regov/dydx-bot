@@ -5,11 +5,12 @@ from func_cointegration import calculate_zscore
 from func_private import place_market_order
 import json
 import time
+from websocket_handler import send_message_to_clients
 
 from pprint import pprint
 
 # Manage trade exits
-def manage_trade_exits(client):
+async def manage_trade_exits(client):
 
   """
     Manage exiting open positions
@@ -85,6 +86,7 @@ def manage_trade_exits(client):
     # Guard: If not all match exit with error
     if not check_m1 or not check_m2 or not check_live:
       print(f"Warning: Not all open positions match exchange records for {position_market_m1} and {position_market_m2}")
+      await send_message_to_clients(f"Warning: Not all open positions match exchange records for {position_market_m1} and {position_market_m2}")
       continue
 
     # Get prices
@@ -155,6 +157,8 @@ def manage_trade_exits(client):
         # Close position for market 1
         print(">>> Closing market 1 <<<")
         print(f"Closing position for {position_market_m1}")
+        await send_message_to_clients(">>> Closing market 1 <<<")
+        await send_message_to_clients(f"Closing position for {position_market_m1}")
 
         close_order_m1 = place_market_order(
           client,
@@ -167,6 +171,8 @@ def manage_trade_exits(client):
 
         print(close_order_m1["order"]["id"])
         print(">>> Closing <<<")
+        await send_message_to_clients(close_order_m1["order"]["id"])
+        await send_message_to_clients(">>> Closing <<<")
 
         # Protect API
         time.sleep(1)
@@ -174,6 +180,8 @@ def manage_trade_exits(client):
         # Close position for market 2
         print(">>> Closing market 2 <<<")
         print(f"Closing position for {position_market_m2}")
+        await send_message_to_clients(">>> Closing market 2 <<<")
+        await send_message_to_clients(f"Closing position for {position_market_m2}")
 
         close_order_m2 = place_market_order(
           client,
@@ -186,9 +194,12 @@ def manage_trade_exits(client):
 
         print(close_order_m2["order"]["id"])
         print(">>> Closing <<<")
+        await send_message_to_clients(close_order_m2["order"]["id"])
+        await send_message_to_clients(">>> Closing <<<")
 
       except Exception as e:
         print(f"Exit failed for {position_market_m1} with {position_market_m2}")
+        await send_message_to_clients(f"Exit failed for {position_market_m1} with {position_market_m2}")
         save_output.append(position)
 
     # Keep record if items and save
@@ -197,5 +208,6 @@ def manage_trade_exits(client):
 
   # Save remaining items
   print(f"{len(save_output)} Items remaining. Saving file...")
+  await send_message_to_clients(f"{len(save_output)} Items remaining. Saving file...")
   with open("bot_agents.json", "w") as f:
     json.dump(save_output, f)

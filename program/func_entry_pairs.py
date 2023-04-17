@@ -6,12 +6,13 @@ from func_private import is_open_positions
 from func_bot_agent import BotAgent
 import pandas as pd
 import json
+from websocket_handler import send_message_to_clients
 
 from pprint import pprint
 
 
 # Open positions
-def open_positions(client):
+async def open_positions(client):
 
   """
     Manage finding triggers for trade entry
@@ -108,6 +109,7 @@ def open_positions(client):
             account = client.private.get_account()
             free_collateral = float(account.data["account"]["freeCollateral"])
             print(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
+            await send_message_to_clients(f"Balance: {free_collateral} and minimum at {USD_MIN_COLLATERAL}")
           
            # Guard: Ensure collateral
             if free_collateral < USD_MIN_COLLATERAL:
@@ -131,7 +133,7 @@ def open_positions(client):
             )
 
             # Open Trades
-            bot_open_dict = bot_agent.open_trades()
+            bot_open_dict = await bot_agent.open_trades()
 
             # Guard: Handle failure
             if bot_open_dict == "failed":
@@ -146,10 +148,12 @@ def open_positions(client):
 
               # Confirm live status in print
               print("Trade status: Live")
+              await send_message_to_clients("Trade status: Live")
               print("---")
 
   # Save agents
   print(f"Success: Manage open trades checked")
+  await send_message_to_clients(f"Success: Manage open trades checked")
   if len(bot_agents) > 0:
     with open("bot_agents.json", "w") as f:
       json.dump(bot_agents, f)

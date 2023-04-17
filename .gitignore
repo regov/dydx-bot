@@ -1,6 +1,6 @@
 .env
 venv
-/program/__pycache__
-/program/bot_agents.json
-/program/cointegrated_pairs.csv
+program/__pycache__/*
+program/bot_agents.json
+program/cointegrated_pairs.csv
 .vscode/*

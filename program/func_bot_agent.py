@@ -2,6 +2,7 @@ from func_private import place_market_order, check_order_status
 from datetime import datetime, timedelta
 from func_messaging import send_message
 import time
+from websocket_handler import send_message_to_clients
 
 from pprint import pprint
 
@@ -67,7 +68,7 @@ class BotAgent:
     }
 
   # Check order status by id
-  def check_order_status_by_id(self, order_id):
+  async def check_order_status_by_id(self, order_id):
 
     # Allow time to process
     time.sleep(2)
@@ -78,6 +79,7 @@ class BotAgent:
     # Guard: If order cancelled move onto next Pair
     if order_status == "CANCELED":
       print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+      await send_message_to_clients(f"{self.market_1} vs {self.market_2} - Order cancelled...")
       self.order_dict["pair_status"] = "FAILED"
       return "failed"
 
@@ -89,6 +91,7 @@ class BotAgent:
       # Guard: If order cancelled move onto next Pair
       if order_status == "CANCELED":
         print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+        await send_message_to_clients(f"{self.market_1} vs {self.market_2} - Order cancelled...")
         self.order_dict["pair_status"] = "FAILED"
         return "failed"
 
@@ -97,18 +100,21 @@ class BotAgent:
         self.client.private.cancel_order(order_id=order_id)
         self.order_dict["pair_status"] = "ERROR"
         print(f"{self.market_1} vs {self.market_2} - Order error...")
+        await send_message_to_clients(f"{self.market_1} vs {self.market_2} - Order error...")
         return "error"
 
     # Return live
     return "live"
 
   # Open trades
-  def open_trades(self):
+  async def open_trades(self):
 
     # Print status
     print("---")
     print(f"{self.market_1}: Placing first order...")
     print(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
+    await send_message_to_clients(f"{self.market_1}: Placing first order...")
+    await send_message_to_clients(f"Side: {self.base_side}, Size: {self.base_size}, Price: {self.base_price}")
     print("---")
 
     # Place Base Order
@@ -131,7 +137,7 @@ class BotAgent:
       return self.order_dict
 
     # Ensure order is live before processing
-    order_status_m1 = self.check_order_status_by_id(self.order_dict["order_id_m1"])
+    order_status_m1 = await self.check_order_status_by_id(self.order_dict["order_id_m1"])
 
     # Guard: Aborder if order failed
     if order_status_m1 != "live":
@@ -143,6 +149,8 @@ class BotAgent:
     print("---")
     print(f"{self.market_2}: Placing second order...")
     print(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
+    await send_message_to_clients(f"{self.market_2}: Placing second order...")
+    await send_message_to_clients(f"Side: {self.quote_side}, Size: {self.quote_size}, Price: {self.quote_price}")
     print("---")
 
     # Place Quote Order
@@ -165,7 +173,7 @@ class BotAgent:
       return self.order_dict
 
     # Ensure order is live before processing
-    order_status_m2 = self.check_order_status_by_id(self.order_dict["order_id_m2"])
+    order_status_m2 = await self.check_order_status_by_id(self.order_dict["order_id_m2"])
 
     # Guard: Aborder if order failed
     if order_status_m2 != "live":
@@ -190,9 +198,13 @@ class BotAgent:
           print("ABORT PROGRAM")
           print("Unexpected Error")
           print(order_status_close_order)
+          await send_message_to_clients("ABORT PROGRAM")
+          await send_message_to_clients("Unexpected Error")
+          await send_message_to_clients(order_status_close_order)
 
           # Send Message
           send_message("Failed to execute. Code red. Error code: 100")
+          await send_message_to_clients("Failed to execute. Code red. Error code: 100")
 
           # ABORT
           exit(1)
@@ -202,9 +214,13 @@ class BotAgent:
         print("ABORT PROGRAM")
         print("Unexpected Error")
         print(order_status_close_order)
+        await send_message_to_clients("ABORT PROGRAM")
+        await send_message_to_clients("Unexpected Error")
+        await send_message_to_clients(order_status_close_order)
 
         # Send Message
         send_message("Failed to execute. Code red. Error code: 101")
+        await send_message_to_clients("Failed to execute. Code red. Error code: 101")
 
         # ABORT
         exit(1)
