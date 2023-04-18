@@ -11,16 +11,21 @@ async def websocket_handler(websocket, path):
     try:
         while True:
             try:
-                await asyncio.sleep(1)
-            except websockets.exceptions.ConnectionClosedOK:
-                print("WebSocket connection closed with code 1001 (going away)")
+                message = await websocket.recv()
+                if message:
+                    # Process the received message as needed
+                    pass
+            except websockets.exceptions.ConnectionClosed as e:
+                logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
-    except Exception as e:
-        logging.debug(f'WebSocket connection error: {e}')
-        print(f"Error in websocket_handler: {e}")
+            except Exception as e:
+                logging.debug(f'WebSocket connection error: {e}')
+                print(f"Error in websocket_handler: {e}")
+                break
     finally:
         connected_clients.remove(websocket)
-        logging.debug(f'WebSocket connection closed: {websocket.remote_address}')
+        logging.debug(f'WebSocket connection removed: {websocket.remote_address}')
+
 
 async def start_websocket_server():
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
