@@ -5,8 +5,6 @@ import ssl
 import json
 from func_connections import connect_dydx
 
-from pprint import pprint
-
 connected_clients = []
 
 async def get_user_data():
@@ -47,7 +45,7 @@ async def start_websocket_server():
     ssl_context.load_cert_chain(certfile='/etc/letsencrypt/live/dydx-bot.afao.fr/fullchain.pem', keyfile='/etc/letsencrypt/live/dydx-bot.afao.fr/privkey.pem')
 
     async with websockets.serve(websocket_handler, "0.0.0.0", 8765, ssl=ssl_context):
-        logging.debug("WebSocket server started on wss://localhost:8765")
+        logging.debug("WebSocket server started on port 8765")
         await asyncio.Future()  # Run the WebSocket server indefinitely
 
 async def send_message_to_clients(message):
