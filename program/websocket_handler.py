@@ -3,24 +3,13 @@ import websockets
 import logging
 import ssl
 import json
-from func_connections import connect_dydx
 
 connected_clients = []
 
-async def get_user_data():
-    # Remplacez cette fonction par la logique nécessaire pour obtenir les données de l'utilisateur
-
-    client = connect_dydx()
-    account = client.private.get_account()
-    return account
 
 async def websocket_handler(websocket, path):
     logging.debug(f'New WebSocket connection: {websocket.remote_address}')
     connected_clients.append(websocket)
-
-    # Récupérer les données de l'utilisateur et les envoyer au client
-    user_data = await get_user_data()
-    await websocket.send(json.dumps(user_data))
 
     try:
         while True:
