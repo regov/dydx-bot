@@ -11,6 +11,9 @@ async def websocket_handler(websocket, path):
     try:
         while True:
             await asyncio.sleep(1)
+    except Exception as e:
+        logging.debug(f'WebSocket connection error: {e}')
+        print(f"Error in websocket_handler: {e}")
     finally:
         connected_clients.remove(websocket)
         logging.debug(f'WebSocket connection closed: {websocket.remote_address}')
