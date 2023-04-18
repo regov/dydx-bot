@@ -22,7 +22,6 @@ async def websocket_handler(websocket, path):
     # Récupérer les données de l'utilisateur et les envoyer au client
     user_data = await get_user_data()
     await websocket.send(user_data)
-    print(user_data)
 
     try:
         while True:

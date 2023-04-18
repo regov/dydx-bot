@@ -4,6 +4,7 @@ from web3 import Web3
 from constants import (
     HOST,
     ETHEREUM_ADDRESS,
+    ETH_PRIVATE_KEY,
     HTTP_PROVIDER,
     STARK_PRIVATE_KEY,
     DYDX_API_KEY,
@@ -21,7 +22,7 @@ def connect_dydx():
             "passphrase": DYDX_API_PASSPHRASE,
         },
         stark_private_key=STARK_PRIVATE_KEY,
-        eth_private_key=config('ETH_PRIVATE_KEY'),
+        eth_private_key=ETH_PRIVATE_KEY,
         default_ethereum_address=ETHEREUM_ADDRESS,
         web3=Web3(Web3.HTTPProvider(HTTP_PROVIDER))
     )
