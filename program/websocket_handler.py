@@ -4,8 +4,15 @@ import logging
 import ssl
 import json
 
+from func_connections import connect_dydx
+
 connected_clients = []
 
+async def get_user_data():
+    # Remplacez cette fonction par la logique nécessaire pour obtenir les données de l'utilisateur
+    client = connect_dydx()
+    account = client.private.get_account()
+    return account
 
 async def websocket_handler(websocket, path):
     logging.debug(f'New WebSocket connection: {websocket.remote_address}')
@@ -16,8 +23,11 @@ async def websocket_handler(websocket, path):
             try:
                 message = await websocket.recv()
                 if message:
-                    # Process the received message as needed
-                    pass
+                    # Traiter les messages reçus et envoyer les données de l'utilisateur en réponse à une demande spécifique
+                    message_data = json.loads(message)
+                    if message_data.get('action') == 'get_user_data':
+                        user_data = await get_user_data()
+                        await websocket.send(json.dumps(user_data))
             except websockets.exceptions.ConnectionClosed as e:
                 logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
@@ -28,6 +38,7 @@ async def websocket_handler(websocket, path):
     finally:
         connected_clients.remove(websocket)
         logging.debug(f'WebSocket connection removed: {websocket.remote_address}')
+
 
 async def start_websocket_server():
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
