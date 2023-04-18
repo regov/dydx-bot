@@ -27,7 +27,7 @@ async def websocket_handler(websocket, path):
                     message_data = json.loads(message)
                     if message_data.get('action') == 'get_user_data':
                         user_data = await get_user_data()
-                        await websocket.send(user_data.data)
+                        await websocket.send(user_data.data["account"]["equity"])
             except websockets.exceptions.ConnectionClosed as e:
                 logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
