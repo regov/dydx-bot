@@ -29,7 +29,7 @@ async def websocket_handler(websocket, path):
                         user_data = await get_user_data()
 
                         balance = {"balance": user_data}
-                        await websocket.send(balance)
+                        await websocket.send(json.dumps(balance))
             except websockets.exceptions.ConnectionClosed as e:
                 logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
