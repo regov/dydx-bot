@@ -2,6 +2,7 @@ import asyncio
 import websockets
 import logging
 import ssl
+import json
 from func_connections import connect_dydx
 
 from pprint import pprint
@@ -21,7 +22,7 @@ async def websocket_handler(websocket, path):
 
     # Récupérer les données de l'utilisateur et les envoyer au client
     user_data = await get_user_data()
-    await websocket.send(user_data)
+    await websocket.send(json.dumps(user_data))
 
     try:
         while True:
