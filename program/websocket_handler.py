@@ -10,7 +10,11 @@ async def websocket_handler(websocket, path):
     connected_clients.append(websocket)
     try:
         while True:
-            await asyncio.sleep(1)
+            try:
+                await asyncio.sleep(1)
+            except websockets.exceptions.ConnectionClosedOK:
+                print("WebSocket connection closed with code 1001 (going away)")
+                break
     except Exception as e:
         logging.debug(f'WebSocket connection error: {e}')
         print(f"Error in websocket_handler: {e}")
