@@ -12,7 +12,7 @@ async def get_user_data():
     # Remplacez cette fonction par la logique nécessaire pour obtenir les données de l'utilisateur
     client = connect_dydx()
     account = client.private.get_account()
-    return account
+    return account.data["account"]["equity"]
 
 async def websocket_handler(websocket, path):
     logging.debug(f'New WebSocket connection: {websocket.remote_address}')
@@ -28,7 +28,7 @@ async def websocket_handler(websocket, path):
                     if message_data.get('action') == 'get_user_data':
                         user_data = await get_user_data()
 
-                        balance = {"balance": user_data.data["account"]["equity"]}
+                        balance = {"balance": user_data}
                         await websocket.send(balance)
             except websockets.exceptions.ConnectionClosed as e:
                 logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
