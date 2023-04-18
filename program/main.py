@@ -101,7 +101,7 @@ async def run_bot():
                         print("Finding trading opportunities...")
                         
                         await send_message_to_clients(f"Balance: {quote_balance}")
-                        await send_message_to_clients(f"equity: {equity}")
+                        await send_message_to_clients(f"Equity: {equity}")
                         await send_message_to_clients("Finding trading opportunities...")
 
                         await open_positions(client)
