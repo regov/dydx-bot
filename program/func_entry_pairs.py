@@ -1,4 +1,4 @@
-from constants import ZSCORE_THRESHOLD, USD_PER_TRADE, USD_MIN_COLLATERAL
+from constants import ZSCORE_THRESHOLD, USD_PER_TRADE, USD_MIN_COLLATERAL, TOKEN_FACTOR_10
 from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
@@ -91,6 +91,13 @@ async def open_positions(client):
           quote_quantity = 1 / quote_price * USD_PER_TRADE
           base_step_size = markets["markets"][base_market]["stepSize"]
           quote_step_size = markets["markets"][quote_market]["stepSize"]
+
+          for particolari in TOKEN_FACTOR_10 :
+            if base_market== particolari :
+              base_quantity= float(int(base_quantity/10)*10) 
+            if quote_market== particolari :
+              quote_quantity= float(int(quote_quantity/10)*10) 
+
 
           # Format sizes
           base_size = format_number(base_quantity, base_step_size)
