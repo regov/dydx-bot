@@ -30,6 +30,7 @@ async def websocket_handler(websocket, path):
 
                         balance = {"balance": user_data}
                         await websocket.send(json.dumps(balance))
+
             except websockets.exceptions.ConnectionClosed as e:
                 logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
@@ -51,8 +52,9 @@ async def start_websocket_server():
         await asyncio.Future()  # Run the WebSocket server indefinitely
 
 async def send_message_to_clients(message):
+    message =  {"message": str(message)}
     for client in connected_clients:
-        await client.send(message)
+        await client.send(json.dumps(message))
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
