@@ -30,7 +30,7 @@ async def open_positions(client):
   """
 
   # Load cointegrated pairs
-  df = pd.read_csv("chemin_fichier_csv")
+  df = pd.read_csv(chemin_fichier_csv)
 
   # Get markets from referencing of min order size, tick size etc
   markets = client.public.get_markets().data
