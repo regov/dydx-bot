@@ -26,6 +26,7 @@ STATS_WINDOW = config('STATS_WINDOW', default=21, cast=int)
 MAX_HALF_LIFE = config('MAX_HALF_LIFE', default=24, cast=float)
 ZSCORE_OPEN_THRESHOLD = config('ZSCORE_OPEN_THRESHOLD', default=1.5, cast=float)
 ZSCORE_CLOSE_THRESHOLD = config('ZSCORE_CLOSE_THRESHOLD', default=1.5, cast=float)
+
 USD_PER_TRADE = config('USD_PER_TRADE', default=50, cast=float)
 USD_MIN_COLLATERAL = config('USD_MIN_COLLATERAL', default=1880, cast=float)
 
