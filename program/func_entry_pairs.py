@@ -1,4 +1,4 @@
-from constants import ZSCORE_THRESHOLD, USD_PER_TRADE, USD_MIN_COLLATERAL, TOKEN_FACTOR_10
+from constants import ZSCORE_OPEN_THRESHOLD, USD_PER_TRADE, USD_MIN_COLLATERAL, TOKEN_FACTOR_10
 from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
@@ -10,6 +10,16 @@ from websocket_handler import send_message_to_clients
 
 from pprint import pprint
 
+import os
+
+chemin_fichier_courant = os.path.abspath(__file__)
+
+# Obtenez le répertoire du fichier script en cours
+chemin_dossier_courant = os.path.dirname(chemin_fichier_courant)
+
+chemin_fichier_json = os.path.join(chemin_dossier_courant, "bot_agents.json")
+chemin_fichier_csv = os.path.join(chemin_dossier_courant, "cointegrated_pairs.csv")
+
 
 # Open positions
 async def open_positions(client):
@@ -20,7 +30,7 @@ async def open_positions(client):
   """
 
   # Load cointegrated pairs
-  df = pd.read_csv("cointegrated_pairs.csv")
+  df = pd.read_csv("chemin_fichier_csv")
 
   # Get markets from referencing of min order size, tick size etc
   markets = client.public.get_markets().data
@@ -30,7 +40,7 @@ async def open_positions(client):
 
   # Opening JSON file
   try:
-    open_positions_file = open("bot_agents.json")
+    open_positions_file = open(chemin_fichier_json)
     open_positions_dict = json.load(open_positions_file)
     
     for p in open_positions_dict:
@@ -59,7 +69,7 @@ async def open_positions(client):
       z_score = calculate_zscore(spread).values.tolist()[-1]
 
       # Establish if potential trade
-      if abs(z_score) >= ZSCORE_THRESHOLD:
+      if abs(z_score) >= ZSCORE_OPEN_THRESHOLD:
 
         # Ensure like-for-like not already open (diversify trading)
         is_base_open = is_open_positions(client, base_market)
@@ -162,5 +172,5 @@ async def open_positions(client):
   print(f"Success: Manage open trades checked")
   await send_message_to_clients(f"Success: Manage open trades checked")
   if len(bot_agents) > 0:
-    with open("bot_agents.json", "w") as f:
+    with open(chemin_fichier_json, "w") as f:
       json.dump(bot_agents, f)

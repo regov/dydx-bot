@@ -4,6 +4,17 @@ import statsmodels.api as sm
 from statsmodels.tsa.stattools import coint
 from constants import MAX_HALF_LIFE, STATS_WINDOW
 
+
+import os
+
+chemin_fichier_courant = os.path.abspath(__file__)
+
+# Obtenez le répertoire du fichier script en cours
+chemin_dossier_courant = os.path.dirname(chemin_fichier_courant)
+
+chemin_fichier_csv = os.path.join(chemin_dossier_courant, "cointegrated_pairs.csv")
+
+
 # Calculate Half Life
 # https://www.pythonforfinance.net/2016/05/09/python-backtesting-mean-reversion-part-2/
 
@@ -78,7 +89,7 @@ def store_cointegration_results(df_market_prices):
 
   # Create and save DataFrame
   df_criteria_met = pd.DataFrame(criteria_met_pairs)
-  df_criteria_met.to_csv("cointegrated_pairs.csv")
+  df_criteria_met.to_csv(chemin_fichier_csv)
   del df_criteria_met
 
   # Return result

@@ -5,6 +5,15 @@ import json
 
 from pprint import pprint
 
+import os
+
+chemin_fichier_courant = os.path.abspath(__file__)
+
+# Obtenez le répertoire du fichier script en cours
+chemin_dossier_courant = os.path.dirname(chemin_fichier_courant)
+
+chemin_fichier_json = os.path.join(chemin_dossier_courant, "bot_agents.json")
+
 # Get existing open positions
 def is_open_positions(client, market):
 
@@ -122,7 +131,7 @@ def abord_all_positions(client):
 
     # Override json file with empty list
     bot_agents = []
-    with open("bot_agents.json", "w") as f:
+    with open(chemin_fichier_json, "w") as f:
       json.dump(bot_agents, f)
 
     # Return closed orders

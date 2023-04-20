@@ -1,6 +1,5 @@
 import asyncio
 import websockets
-import logging
 import ssl
 import json
 
@@ -15,7 +14,6 @@ async def get_user_data():
     return account.data["account"]["equity"]
 
 async def websocket_handler(websocket, path):
-    logging.debug(f'New WebSocket connection: {websocket.remote_address}')
     connected_clients.append(websocket)
 
     try:
@@ -32,15 +30,12 @@ async def websocket_handler(websocket, path):
                         await websocket.send(json.dumps(balance))
 
             except websockets.exceptions.ConnectionClosed as e:
-                logging.debug(f"WebSocket connection closed: {websocket.remote_address} - {e}")
                 break
             except Exception as e:
-                logging.debug(f'WebSocket connection error: {e}')
                 print(f"Error in websocket_handler: {e}")
                 break
     finally:
         connected_clients.remove(websocket)
-        logging.debug(f'WebSocket connection removed: {websocket.remote_address}')
 
 
 async def start_websocket_server():
@@ -48,7 +43,6 @@ async def start_websocket_server():
     ssl_context.load_cert_chain(certfile='/etc/letsencrypt/live/dydx-bot.afao.fr/fullchain.pem', keyfile='/etc/letsencrypt/live/dydx-bot.afao.fr/privkey.pem')
 
     async with websockets.serve(websocket_handler, "0.0.0.0", 8765, ssl=ssl_context):
-        logging.debug("WebSocket server started on port 8765")
         await asyncio.Future()  # Run the WebSocket server indefinitely
 
 async def send_message_to_clients(message):
@@ -57,5 +51,4 @@ async def send_message_to_clients(message):
         await client.send(json.dumps(message))
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
     asyncio.run(start_websocket_server())

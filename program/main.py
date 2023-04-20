@@ -10,9 +10,6 @@ from websocket_handler import start_websocket_server, send_message_to_clients, c
 
 import asyncio
 import threading
-import logging
-
-logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s')
 
 # Run bot
 async def run_bot():
@@ -132,7 +129,6 @@ def run_asyncio_coroutine_in_thread(coroutine):
     return thread
 
 if __name__ == "__main__":
-    logging.debug("Starting WebSocket server...")
     websocket_server_thread = run_asyncio_coroutine_in_thread(start_websocket_server())
     bot_thread = run_asyncio_coroutine_in_thread(run_bot())
 
