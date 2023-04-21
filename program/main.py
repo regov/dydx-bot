@@ -32,7 +32,7 @@ async def run_bot():
                 print (" Error connecting to DYDX. Check your keys and try again.")
                 send_message(f"Failed to connect to client {e}")
                 await send_message_to_clients(f"Failed to connect to client {e}")
-                exit(1)
+                # exit(1)
             
             # Abord all open positions and orders 
             if ABORD_ALL_POSITIONS:
@@ -43,7 +43,7 @@ async def run_bot():
                 except Exception as e:
                     print (" Error closing open positions: ", e)
                     send_message(f"Error closing all positions {e}")
-                    exit(1)
+                    # exit(1)
 
             # Find Cointegrated Pairs
             if FIND_COINTEGRATED_PAIRS:
@@ -58,7 +58,7 @@ async def run_bot():
                     print("Error constructing market prices: ", e)
                     send_message(f"Error constructing market prices {e}")
                     await send_message_to_clients(f"Error constructing market prices {e}")
-                    exit(1)
+                    # exit(1)
 
                 # Store Cointegrated Pairs
                 try:
@@ -68,12 +68,12 @@ async def run_bot():
                     if stores_result != "saved":
                         print("Error saving cointegrated pairs")
                         await send_message_to_clients("Error saving cointegrated pairs")
-                        exit(1)
+                        # exit(1)
                 except Exception as e:
                     print("Error saving cointegrated pairs: ", e)
                     send_message(f"Error saving cointegrated pairs {e}")
                     await send_message_to_clients(f"Error saving cointegrated pairs {e}")
-                    exit(1)
+                    # exit(1)
 
             # Run as always on
             while True:
@@ -88,7 +88,7 @@ async def run_bot():
                         print("Error managing exiting positions: ", e)
                         send_message(f"Error managing exiting positions {e}")
                         await send_message_to_clients(f"Error managing exiting positions {e}")
-                        exit(1)
+                        # exit(1)
 
                     # Place trades for opening positions
                 if PLACE_TRADES:
@@ -106,12 +106,12 @@ async def run_bot():
                         print("Error trading pairs: ", e)
                         send_message(f"Error opening trades {e}")
                         await send_message_to_clients(f"Error opening trades {e}")
-                        exit(1)
+                        # exit(1)
         except Exception as e:
             print(e)
             send_message("DYDX Bot Failed to start")
             await send_message_to_clients("DYDX Bot Failed to start")
-            exit(1)
+            # exit(1)
         finally:
             send_message("DYDX Bot Stopped")
             await send_message_to_clients("DYDX Bot Stopped")
