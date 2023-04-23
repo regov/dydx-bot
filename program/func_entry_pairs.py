@@ -109,10 +109,10 @@ async def open_positions(client):
               quote_quantity= float(int(quote_quantity/10)*10) 
 
           for particolari in TOKEN_FACTOR_100:
-          if base_market == particolari:
-              base_quantity = float(int(base_quantity / 100) * 100)
-          if quote_market == particolari:
-              quote_quantity = float(int(quote_quantity / 100) * 100)
+            if base_market == particolari:
+                base_quantity = float(int(base_quantity / 100) * 100)
+            if quote_market == particolari:
+                quote_quantity = float(int(quote_quantity / 100) * 100)
 
 
           # Format sizes
