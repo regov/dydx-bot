@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+</head>
+<body>
+        <script>
+                const currentTimestamp = Math.floor(Date.now() / 1000); // Convertir le temps actuel en secondes
+const cookieExpirationTimestamp = 1679687460.291777;
+const remainingLifetime = cookieExpirationTimestamp - currentTimestamp;
+
+// Convertir les secondes restantes en un format lisible
+const remainingDays = Math.floor(remainingLifetime / (24 * 60 * 60));
+const remainingHours = Math.floor((remainingLifetime % (24 * 60 * 60)) / (60 * 60));
+const remainingMinutes = Math.floor((remainingLifetime % (60 * 60)) / 60);
+const remainingSeconds = Math.floor(remainingLifetime % 60);
+
+console.log(`Durée de vie restante du cookie : ${remainingDays} jours, ${remainingHours} heures, ${remainingMinutes} minutes et ${remainingSeconds} secondes.`);
+
+        </script>
+</body>
+</html>
