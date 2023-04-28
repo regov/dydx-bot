@@ -45,7 +45,8 @@ async def open_positions(client):
     
     for p in open_positions_dict:
       bot_agents.append(p)
-  except:
+  except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"Error while opening or reading JSON file: {e}")
     bot_agents = []
       
   
@@ -79,8 +80,8 @@ async def open_positions(client):
         if not is_base_open and not is_quote_open:
 
           # Determine side
-          base_side = "BUY" if z_score < 0 else "SELL"
-          quote_side = "BUY" if z_score > 0 else "SELL"
+          base_side = "BUY" if z_score > 0 else "SELL"
+          quote_side = "BUY" if z_score < 0 else "SELL"
 
           # Get acceptable price in string format with correct number of decimals
           base_price = series_1[-1]
