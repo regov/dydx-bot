@@ -82,6 +82,9 @@ async def open_positions(client):
           # Determine side
           base_side = "BUY" if z_score > 0 else "SELL"
           quote_side = "BUY" if z_score < 0 else "SELL"
+          
+          # base_side = "BUY" if z_score < 0 else "SELL"
+          # quote_side = "BUY" if z_score > 0 else "SELL"
 
           # Get acceptable price in string format with correct number of decimals
           base_price = series_1[-1]
